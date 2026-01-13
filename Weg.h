@@ -33,7 +33,8 @@ public:
     void vAnnahme(std::unique_ptr<Fahrzeug> pFzg);              // driving
     void vAnnahme(std::unique_ptr<Fahrzeug> pFzg, double startZeit); // parked
     std::unique_ptr<Fahrzeug> pAbgabe(const Fahrzeug& aFzg);
-    virtual void vZeichnen() const;
+       virtual void vZeichnen() const;
+       void vSetzeGezeichnet(bool gezeichnet = true) const;
 
 
 };

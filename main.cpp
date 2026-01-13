@@ -24,10 +24,12 @@ void vAufgabe1();
 void vAufgabe1a();
 void vAufgabe2();
 void vAufgabe3();
+void vAufgabe3();
 void vAufgabe_Probe();
 void vAufgabe_AB1();
 void vAufgabe_4();
 void vAufgabe5_4_Test();
+void vAufgabe6();
 
 //int main() {
     //vAufgabe1();
@@ -293,31 +295,50 @@ void vTestLosfahren(double dt) {
     }
 }
 
-//int main() {
-    //std::cout << "=== dt = 0.25 ===\n";
-   // vTestLosfahren(0.25);
 
-    //std::cout << "\n=== dt = 0.3 ===\n";
-    //vTestLosfahren(0.3);
-    //return 0;
-//}
-int main() {
-	std::cout << "RUNNING MY GRAPHICS TEST MAIN\n";
+void vAufgabe6Simulation(double dt) {
+    std::cout << "\n=== Aufgabe 6 Simulation (dt=" << dt << ") ===\n";
+    dGlobaleZeit = 0.0;
 
-    bInitialisiereGrafik(1200, 800);
+    bInitialisiereGrafik(800, 500);
 
-    Weg w("TestWeg", 200.0);
-    w.vAnnahme(std::make_unique<PKW>("Auto", 40.0, 6.0));
+    Weg wegHin("Hinweg", 500.0, Tempolimit::Innerorts);
+    Weg wegRueck("Rueckweg", 500.0, Tempolimit::Autobahn);
 
-    for (int i = 0; i < 100; ++i) {
-        dGlobaleZeit = i * 0.1;
-        w.vSimulieren();
+    wegHin.vAnnahme(std::make_unique<PKW>("PKW_Hin", 120.0, 7.0));
+    wegHin.vAnnahme(std::make_unique<Fahrrad>("Rad_Hin", 30.0), 3.0);
+
+    wegRueck.vAnnahme(std::make_unique<PKW>("PKW_Rueck", 140.0, 6.5), 3.0);
+    wegRueck.vAnnahme(std::make_unique<Fahrrad>("Rad_Rueck", 25.0));
+
+    int coords[4] = { 700, 250, 100, 250 };
+    bZeichneStrasse(wegHin.sName(), wegRueck.sName(), 500, 2, coords);
+    wegHin.vSetzeGezeichnet();
+    wegRueck.vSetzeGezeichnet();
+
+    for (int step = 0; step < 30; ++step) {
+        dGlobaleZeit = step * dt;
+        std::cout << "\nZeit = " << dGlobaleZeit << "\n";
         vSetzeZeit(dGlobaleZeit);
-        w.vZeichnen();
-        vSleep(50); // ✅ milliseconds
+
+        wegHin.vSimulieren();
+        wegRueck.vSimulieren();
+
+        wegHin.vZeichnen();
+        wegRueck.vZeichnen();
+
+        vSleep(100);
     }
 
     vBeendeGrafik();
-    return 0;
 }
 
+void vAufgabe6() {
+    vAufgabe6Simulation(0.25);
+    vAufgabe6Simulation(0.3);
+}
+
+int main() {
+    vAufgabe6();
+    return 0;
+}

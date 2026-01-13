@@ -69,11 +69,23 @@ void Weg::vZeichnen() const
     if (sName().empty()) return;
 
     if (!p_bGezeichnet) {
+        std::string rueckweg = sName();
+        if (rueckweg.size() < 10) {
+            rueckweg += "R";
+        } else {
+            char& last = rueckweg.back();
+            if (last != 'R') {
+                last = 'R';
+            } else {
+                last = 'r';
+            }
+        }
+
         int y = 100 + 60 * iID();
         int coords[4] = { 100, y, 700, y };
 
-        bool ok = bZeichneStrasse(sName(), "", (int)p_dLaenge, 2, coords);
-        std::cout << "bZeichneStrasse('" << sName() << "') -> " << ok << "\n";
+        bool ok = bZeichneStrasse(sName(), rueckweg, static_cast<int>(p_dLaenge), 2, coords);
+        std::cout << "bZeichneStrasse('" << sName() << "', '" << rueckweg << "') -> " << ok << "\n";
 
         p_bGezeichnet = true;
     }
@@ -81,6 +93,10 @@ void Weg::vZeichnen() const
     for (const auto& pfzg : p_pFahrzeuge) {
         if (pfzg) pfzg->vZeichnen(*this);
     }
+}
+
+void Weg::vSetzeGezeichnet(bool gezeichnet) const {
+    p_bGezeichnet = gezeichnet;
 }
 
 
