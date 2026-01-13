@@ -4,6 +4,7 @@
 #include <memory>
 #include <algorithm>
 #include <cmath>
+#include <random>
 //classes(header files)
 #include "Fahrzeug.h"
 #include "PKW.h"
@@ -13,6 +14,7 @@
 #include "PKW.h"
 #include "Fahrrad.h"
 #include "SimuClient.h"
+#include "vertagt_liste.h"
 
 //using directives
 using namespace std;
@@ -30,6 +32,7 @@ void vAufgabe_AB1();
 void vAufgabe_4();
 void vAufgabe5_4_Test();
 void vAufgabe6();
+void vAufgabe6a();
 
 //int main() {
     //vAufgabe1();
@@ -338,7 +341,45 @@ void vAufgabe6() {
     vAufgabe6Simulation(0.3);
 }
 
+void vAufgabe6a() {
+    std::cout << "\n=== Aufgabe 6a (vertagt::VListe) ===\n";
+
+    vertagt::VListe<int> liste;
+    std::mt19937 device(0);
+    std::uniform_int_distribution<int> dist(1, 10);
+
+    for (int i = 0; i < 10; ++i) {
+        liste.push_back(dist(device));
+    }
+    liste.vAktualisieren();
+
+    auto vAusgeben = [&liste]() {
+        for (const auto& value : liste) {
+            std::cout << value << " ";
+        }
+        std::cout << "\n";
+    };
+
+    vAusgeben();
+
+    for (auto it = liste.begin(); it != liste.end(); ++it) {
+        if (*it > 5) {
+            liste.erase(it);
+        }
+    }
+
+    vAusgeben();
+
+    liste.vAktualisieren();
+    vAusgeben();
+
+    liste.push_front(1);
+    liste.push_back(10);
+    liste.vAktualisieren();
+    vAusgeben();
+}
+
 int main() {
-    vAufgabe6();
+    vAufgabe6a();
     return 0;
 }

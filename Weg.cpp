@@ -28,6 +28,7 @@ void Weg::vSimulieren() {
     // (optional time check like before)
     // vSetZeit(dGlobaleZeit);
 
+    p_pFahrzeuge.vAktualisieren();
     for (auto it = p_pFahrzeuge.begin(); it != p_pFahrzeuge.end(); ) {
         auto current = it++; // advance first, so erasing current is safe
         if (!(*current)) continue;
@@ -39,6 +40,7 @@ void Weg::vSimulieren() {
             e.vBearbeiten(); // Losfahren or Streckenende
         }
     }
+    p_pFahrzeuge.vAktualisieren();
 }
 
 
@@ -48,20 +50,21 @@ void Weg::vAusgeben(std::ostream& os) const {
 
     // Länge + (Fahrzeugnamen)
     os << " : " << p_dLaenge << " ( ";
-    for (const auto& pfzg : p_pFahrzeuge) {
-        os << pfzg->sName() << " ";
+        for (const auto& pfzg : p_pFahrzeuge) {
+            if (!pfzg) continue;
+            os << pfzg->sName() << " ";
+        }
+        os << ")";
     }
-    os << ")";
-}
 
 void Weg::vKopf() {
     std::cout << "ID | Name | Laenge | Fahrzeuge\n";
     std::cout << "------------------------------------------------\n";
 }
 void Weg::vAnnahme(std::unique_ptr<Fahrzeug> pFzg) {
-    // driving vehicle
+    // driving vehicle␊
     pFzg->vNeueStrecke(*this);
-    p_pFahrzeuge.push_back(std::move(pFzg)); // driving goes to the back
+    p_pFahrzeuge.push_back(std::move(pFzg)); // driving goes to the back␊
 }
 
 void Weg::vZeichnen() const
@@ -101,16 +104,16 @@ void Weg::vSetzeGezeichnet(bool gezeichnet) const {
 
 
 void Weg::vAnnahme(std::unique_ptr<Fahrzeug> pFzg, double startZeit) {
-    // parked vehicle
+    // parked vehicle␊
     pFzg->vNeueStrecke(*this, startZeit);
-    p_pFahrzeuge.push_front(std::move(pFzg)); // parked goes to the front
+    p_pFahrzeuge.push_front(std::move(pFzg)); // parked goes to the front␊
 }
 std::unique_ptr<Fahrzeug> Weg::pAbgabe(const Fahrzeug& aFzg) {
     for (auto it = p_pFahrzeuge.begin(); it != p_pFahrzeuge.end(); ++it) {
         if (!(*it)) continue;
-        if (**it == aFzg) {                 // compares by ID (Simulationsobjekt::operator==)
-            auto ret = std::move(*it);      // take ownership out
-            p_pFahrzeuge.erase(it);         // remove list node
+        if (**it == aFzg) {                 // compares by ID (Simulationsobjekt::operator==)␊
+            auto ret = std::move(*it);      // take ownership out␊
+            p_pFahrzeuge.erase(it);         // remove list node (deferred)
             return ret;
         }
     }

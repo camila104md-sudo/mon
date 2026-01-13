@@ -5,6 +5,7 @@
 
 #include <list>
 #include <memory>
+#include "vertagt_liste.h"
 
 // forward declaration gegen zirkuläre Includes
 class Fahrzeug;
@@ -12,7 +13,7 @@ class Fahrzeug;
 class Weg : public Simulationsobjekt {
 private:
     double p_dLaenge;
-    std::list<std::unique_ptr<Fahrzeug>> p_pFahrzeuge;
+    vertagt::VListe<std::unique_ptr<Fahrzeug>> p_pFahrzeuge;
     Tempolimit p_eTempolimit;
     mutable bool p_bGezeichnet = false;
 
